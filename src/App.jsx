@@ -82,27 +82,55 @@
 
 //seperate files
 
-import { useState } from "react"
-import TodoForm from "./Components/TodoForm"
-import TodoList from "./Components/TodoList"
+import { useEffect, useState } from "react";
+import TodoForm from "./Components/TodoForm";
+import TodoList from "./Components/TodoList";
+import DelModal from "./Components/DelModal";
 function App() {
-   const [todos, setTodos] = useState([])
+  //const [todos, setTodos] = useState([])
 
-   function addTodo(text){
-    setTodos([...todos, {id:Date.now(), text, completed:false}])
+  const [todos, setTodos] = useState(() => {
+    const saved = localStorage.getItem("task");
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  const [showModal , setShowModal] = useState(false);
+  const [toDoDelete , setToDoDelete ] = useState(null);
+
+  const handleDelClick = (id) => {
+    setShowModal(true);
+    setToDoDelete(id);
+  }
+
+
+  const confirmDelete = ()=>{
+    setTodos(todos.filter((item) => item.id !== toDoDelete));
+    setShowModal(false);
+    setToDoDelete(null);
+  }
+
+  const cancelDelete = () => {
+    setShowModal(false);
+    setToDoDelete(null);
+  } 
+
+  useEffect(() => {
+    localStorage.setItem("task", JSON.stringify(todos));
+  },[todos]);
+   console.log(todos);
+
+  function addTodo(text) {
+    setTodos([...todos, { id: Date.now(), text, completed: false }]);
   }
 
   return (
-    <>
-     <div className="min-h-screen  from-blue-50 to-blue-100 p-6">
-      <h1 className="text-3xl font-bold text-center text-blue-700 mb-4">Todo List</h1>
-    <TodoForm addTodo={addTodo}/>
-    <TodoList todos={todos}/>
-    </div>
+   <>
+      <h1>Todo List</h1>
+      <TodoForm addTodo={addTodo} />
+       <TodoList todos={todos} delToDo = {handleDelClick} />
+      {showModal && <DelModal  onConfirm={confirmDelete} onCancel={cancelDelete}/>}
     </>
-  )
+  );
 }
 
-export default App
-
-
+export default App;
