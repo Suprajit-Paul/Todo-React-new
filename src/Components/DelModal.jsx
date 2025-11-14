@@ -14,6 +14,7 @@ const DelModal = ({onConfirm , onCancel}) => {
           <button
             tabIndex={-1}
             type="button"
+            onClick={onCancel}
             className="absolute top-2 right-2 rtl:right-auto rtl:left-2"
           >
             <svg
@@ -39,7 +40,7 @@ const DelModal = ({onConfirm , onCancel}) => {
                 className="text-xl font-bold tracking-tight"
                 id="page-action.heading"
               >
-                Delete John Doe
+                Delete Todo !!
               </h2>
               <p className="text-gray-500">
                 Are you sure you would like to do this?
